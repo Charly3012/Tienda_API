@@ -3,6 +3,8 @@ using ApiTienda.Repository.IRepository;
 using ApiTienda.Repository;
 using Microsoft.EntityFrameworkCore;
 using ApiTienda.TiendaMapper;
+using ApiTienda.Services.IServices;
+using ApiTienda.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,9 +12,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
                                                     options.UseSqlServer(builder.Configuration.GetConnectionString("ConexionSQL")));
+builder.Services.AddScoped<IProductoCategoriaService, ProductoCategoriaService>();
 
 //Agregar los repositorios
 builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
+builder.Services.AddScoped<IProductoRepository, ProductoRepository>();
+builder.Services.AddScoped<IVentaRepository, VentaRepository>();
 
 
 //Agregar el automapper

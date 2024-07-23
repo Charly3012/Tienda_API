@@ -47,7 +47,7 @@ namespace ApiTienda.Repository
 
         public bool ExisteCategoria(long id)
         {
-            if (id == null) return false;
+            if (id == 0) return false;
 
             return _bd.Categoria.Any(c => c.Id == id);
         }

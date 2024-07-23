@@ -135,3 +135,4 @@ D:\Proyectos C#\ApiTienda\ApiTienda\obj\Debug\net8.0\ApiTienda.pdb
 D:\Proyectos C#\ApiTienda\ApiTienda\obj\Debug\net8.0\ApiTienda.genruntimeconfig.cache
 D:\Proyectos C#\ApiTienda\ApiTienda\obj\Debug\net8.0\ref\ApiTienda.dll
 D:\Proyectos C#\ApiTienda\ApiTienda\bin\Debug\net8.0\AutoMapper.dll
+D:\Proyectos C#\ApiTienda\ApiTienda\obj\Debug\net8.0\ApiTienda.sourcelink.json
