@@ -1,5 +1,8 @@
-﻿using ApiTienda.Models.DTOs;
+﻿using ApiTienda.Exceptions;
+using ApiTienda.Models;
+using ApiTienda.Models.DTOs;
 using ApiTienda.Repository.IRepository;
+using ApiTienda.Services.IServices;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,11 +16,13 @@ namespace ApiTienda.Controllers
         //Inyección
         private readonly IVentaRepository _veRepo;
         private readonly IMapper _mapper;
+        private readonly IVentaService _vService;
 
-        public VentaController(IVentaRepository veRepo, IMapper mapper)
+        public VentaController(IVentaRepository veRepo, IMapper mapper, IVentaService vService)
         {
             _veRepo = veRepo;
             _mapper = mapper;
+            _vService = vService;
         }
 
 
@@ -30,10 +35,10 @@ namespace ApiTienda.Controllers
         public IActionResult GetVentas()
         {
             var listaVentas = _veRepo.GetVentas();
-            var listaVentasDTO = new List<VentaDTO>();
+            var listaVentasDTO = new List<VentasVariasDTO>();
             foreach (var item in listaVentas)
             {
-                listaVentasDTO.Add(_mapper.Map<VentaDTO>(item));
+                listaVentasDTO.Add(_mapper.Map<VentasVariasDTO>(item));
             }
             return Ok(listaVentasDTO);
         }
@@ -57,5 +62,71 @@ namespace ApiTienda.Controllers
             return Ok(itemVentaDTO);
 
         }
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult PostVenta(CrearVentaDTO crearVentaDTO)
+        {
+            //Checar que el modelo sea valido
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var venta = _vService.CrearVenta(crearVentaDTO);
+                if (!_veRepo.CrearVenta(venta))
+                {
+                    ModelState.AddModelError("", $"Algo salió mal guardando el registro");
+                    return StatusCode(404, ModelState);
+                }
+                return CreatedAtRoute("GetVenta", new { ventaId = venta.Id }, venta);
+            }
+            catch (ProductoNotFoundException e)
+            {
+                ModelState.AddModelError("Error", e.Message);
+                return NotFound(ModelState);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, $"Error interno del servidor: {e.Message}");
+            }
+        }
+
+        //El patch luego pienso si es buena idea agregarlo 
+
+
+
+
+        [HttpDelete("{ventaId:long}", Name = "BorrarVenta")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult BorrarCategoria(long ventaId)
+        {
+
+            if (!_veRepo.ExisteVenta(ventaId))
+            {
+                ModelState.AddModelError("Error", $"No se encontro la venta con el id: {ventaId}");
+                return NotFound(ModelState);
+            }
+
+            var categoria = _veRepo.GetVenta(ventaId);
+            if (!_veRepo.BorrarVenta(categoria))
+            {
+                ModelState.AddModelError("", $"Algo salió mal borrando el registro");
+                return StatusCode(500, ModelState);
+            }
+
+            return NoContent();
+
+        }
+
+
     }
 }

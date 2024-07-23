@@ -25,14 +25,13 @@ namespace ApiTienda.TiendaMapper
             //Ventas
             CreateMap<Venta, CrearVentaDTO>().ReverseMap();
             CreateMap<Venta, VentaDTO>().ReverseMap();
+            CreateMap<Venta, VentasVariasDTO>().ReverseMap();
 
 
             //Detalles venta
             CreateMap<DetalleVenta, CrearDetalleVentaDTO>().ReverseMap();
             CreateMap<DetalleVenta, DetalleVentaDTO>().ReverseMap();
-
-
-
+            
         }
     }
 }

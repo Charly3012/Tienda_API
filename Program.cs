@@ -5,14 +5,23 @@ using Microsoft.EntityFrameworkCore;
 using ApiTienda.TiendaMapper;
 using ApiTienda.Services.IServices;
 using ApiTienda.Services;
+using Microsoft.AspNetCore.Http.Json;
 
 var builder = WebApplication.CreateBuilder(args);
+
+//Configuraciones para json
+//builder.Services.AddControllers()
+//    .AddJsonOptions(options =>
+//    {
+//        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+//    });
 
 // Add services to the container.
 
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
                                                     options.UseSqlServer(builder.Configuration.GetConnectionString("ConexionSQL")));
 builder.Services.AddScoped<IProductoCategoriaService, ProductoCategoriaService>();
+builder.Services.AddScoped<IVentaService, VentaService>();
 
 //Agregar los repositorios
 builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
