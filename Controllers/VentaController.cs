@@ -66,7 +66,7 @@ namespace ApiTienda.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult PostVenta(CrearVentaDTO crearVentaDTO)
@@ -85,12 +85,18 @@ namespace ApiTienda.Controllers
                     ModelState.AddModelError("", $"Algo salió mal guardando el registro");
                     return StatusCode(404, ModelState);
                 }
+                _vService.ActualizarStock(venta);
                 return CreatedAtRoute("GetVenta", new { ventaId = venta.Id }, venta);
             }
             catch (ProductoNotFoundException e)
             {
-                ModelState.AddModelError("Error", e.Message);
+                ModelState.AddModelError("Producto no encontrado", e.Message);
                 return NotFound(ModelState);
+            }
+            catch (ProductoOutStockException e)
+            {
+                ModelState.AddModelError("Error de stock", e.Message);
+                return Conflict(ModelState);
             }
             catch (Exception e)
             {

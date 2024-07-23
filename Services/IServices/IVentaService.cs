@@ -6,5 +6,6 @@ namespace ApiTienda.Services.IServices
     public interface IVentaService
     {
         Venta CrearVenta(CrearVentaDTO crearVentaDTO);
+        void ActualizarStock(Venta venta);
     }
 }

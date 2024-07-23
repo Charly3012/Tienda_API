@@ -46,6 +46,10 @@ namespace ApiTienda.Services
                 {
                     throw new ProductoNotFoundException($"No se encontró el producto con el id: {item.ProductoId}");
                 }
+                if (!(producto.Stock >= item.Cantidad))
+                {
+                    throw new ProductoOutStockException($"No hay suficiente stock para el producto: {producto.Nombre}");
+                } 
 
                 var detalleVenta = new DetalleVenta(producto, item.Cantidad, item.ProductoId);
                 subtotal = subtotal + detalleVenta.Subtotal;
@@ -57,6 +61,17 @@ namespace ApiTienda.Services
             ventaN.Total = subtotal + ventaN.Iva;
 
             return ventaN;
+        }
+
+        public void ActualizarStock(Venta venta)
+        {
+            foreach(var item in venta.Productos)
+            {
+                var productoActualizar = _prRepo.GetProducto(item.ProductoId);
+                productoActualizar.Stock = productoActualizar.Stock - item.Cantidad;
+                _prRepo.ActualizarProducto(productoActualizar);
+            }
+
         }
 
        
