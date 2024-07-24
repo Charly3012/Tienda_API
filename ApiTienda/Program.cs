@@ -18,8 +18,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+string connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING") ??     
+                          builder.Configuration.GetConnectionString("ConexionSQL");
+
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
-                                                    options.UseSqlServer(builder.Configuration.GetConnectionString("ConexionSQL")));
+                                                    options.UseSqlServer(connectionString));
 builder.Services.AddScoped<IProductoCategoriaService, ProductoCategoriaService>();
 builder.Services.AddScoped<IVentaService, VentaService>();
 
@@ -38,16 +41,38 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//Soporte para cors
+builder.Services.AddCors(p => p.AddPolicy("PoliticaCors",build =>
+{
+    build.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+}));
+
+
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.ListenAnyIP(8080); // Puerto HTTP
+    //serverOptions.ListenAnyIP(8081, listenOptions =>
+    //{
+    //    listenOptions.UseHttps(); // Puerto HTTPS
+    //});
+});
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
 
-app.UseHttpsRedirection();
+// Configure the HTTP request pipeline.
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "ApiTienda V1");
+    c.RoutePrefix = string.Empty; // Serve Swagger at the root URL
+});
+
+
+//app.UseHttpsRedirection();
+
+//Soporte cors
+app.UseCors("PoliticaCors");
 
 app.UseAuthorization();
 

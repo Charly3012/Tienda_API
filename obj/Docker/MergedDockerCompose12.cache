@@ -1,0 +1,59 @@
+name: dockercompose150061516049322584
+services:
+  apitienda:
+    container_name: apiTienda
+    depends_on:
+      sqlServerDocker:
+        condition: service_started
+        required: true
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_HTTP_PORTS: "8080"
+      ASPNETCORE_HTTPS_PORTS: "8081"
+    image: apitienda
+    networks:
+      mynetworkapi: null
+    ports:
+      - mode: ingress
+        target: 8080
+        published: "5001"
+        protocol: tcp
+      - mode: ingress
+        target: 8081
+        published: "5002"
+        protocol: tcp
+      - mode: ingress
+        target: 8080
+        protocol: tcp
+      - mode: ingress
+        target: 8081
+        protocol: tcp
+    volumes:
+      - type: bind
+        source: C:\Users\carlo\AppData\Roaming/Microsoft/UserSecrets
+        target: /home/app/.microsoft/usersecrets
+        read_only: true
+        bind:
+          create_host_path: true
+      - type: bind
+        source: C:\Users\carlo\AppData\Roaming/ASP.NET/Https
+        target: /home/app/.aspnet/https
+        read_only: true
+        bind:
+          create_host_path: true
+  sqlServerDocker:
+    container_name: sql-server-docker
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: MiContrasena*1234
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    networks:
+      mynetworkapi: null
+    ports:
+      - mode: ingress
+        target: 1433
+        published: "8006"
+        protocol: tcp
+networks:
+  mynetworkapi:
+    name: dockercompose150061516049322584_mynetworkapi

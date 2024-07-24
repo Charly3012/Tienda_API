@@ -11,10 +11,11 @@
 using System;
 using System.Reflection;
 
+[assembly: Microsoft.Extensions.Configuration.UserSecrets.UserSecretsIdAttribute("a0ad9706-1b68-4046-afc1-17398fc68493")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("ApiTienda")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+db499cefdf69ed9e5ddeffbeb7c1e31342dfa3d1")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+145f89eed4ad48301f39ccbfc772b103474979a6")]
 [assembly: System.Reflection.AssemblyProductAttribute("ApiTienda")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ApiTienda")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

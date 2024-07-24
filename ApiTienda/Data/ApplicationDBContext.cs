@@ -1,5 +1,7 @@
 ﻿using ApiTienda.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace ApiTienda.Data
 {
@@ -7,7 +9,21 @@ namespace ApiTienda.Data
     {
 
         public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base(options)
-        { 
+        {
+            try
+            {
+                var dbCreator = Database.GetService<IDatabaseCreator>() as RelationalDatabaseCreator;
+                if (!dbCreator.CanConnect())
+                {dbCreator.Create();
+                }
+                if (!dbCreator.HasTables())
+                {Database.Migrate();
+                }
+            }
+            catch (Exception ex) { 
+                Console.WriteLine(ex.Message);
+            }
+
                     
         }
 

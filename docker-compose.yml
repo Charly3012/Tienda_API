@@ -1,0 +1,31 @@
+version: '3.4'
+
+services:
+  sqlServerDocker:
+    container_name: sql-server-docker
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    ports:
+      - "8006:1433"
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=MiContrasena*1234
+
+    networks:
+      - mynetworkapi
+
+  apitienda:
+    container_name: apiTienda
+    image: ${DOCKER_REGISTRY-}apitienda
+    build:
+      context: .
+      dockerfile: ApiTienda/Dockerfile
+    networks:
+      - mynetworkapi
+    depends_on:
+      - sqlServerDocker
+    ports:
+      - "5001:8080"
+      - "5002:8081"
+
+networks:
+  mynetworkapi:
