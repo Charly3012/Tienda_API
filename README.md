@@ -114,6 +114,7 @@ HTTPS: Proximamente...<br>
 
 ### Interfaz de Swagger 
 Puedes acceder a la documentación interactiva de la API proporcionada por Swagger <br>
+**Nota:** Cambiar el protocolo a http (por defecto lo abre en https)<br>
 [Documentación de la API](http://apolo.myftp.org:5001/index.html)
 
 
