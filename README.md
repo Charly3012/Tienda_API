@@ -46,10 +46,3 @@ El sistema busca optimizar el proceso de venta y gestión de productos, ofrecien
 
 
 
-## Instalación
-
-
-## Despliegue del proyecto
-- [Despligue por OCI]()
-- [Despliegue por servidor privado]()
-
