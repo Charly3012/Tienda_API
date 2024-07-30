@@ -51,10 +51,10 @@ builder.Services.AddCors(p => p.AddPolicy("PoliticaCors",build =>
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {
     serverOptions.ListenAnyIP(8080); // Puerto HTTP
-    //serverOptions.ListenAnyIP(8081, listenOptions =>
-    //{
-    //    listenOptions.UseHttps(); // Puerto HTTPS
-    //});
+    serverOptions.ListenAnyIP(8081, listenOptions =>
+    {
+        listenOptions.UseHttps(); // Puerto HTTPS
+    });
 });
 
 var app = builder.Build();
